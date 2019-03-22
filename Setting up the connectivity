@@ -1,0 +1,66 @@
+Connecting to the PiloT via a UART port.
+To enable handshaking on the serial port, enter the following commands:
+      gpio –g mode 16 ALT3
+      gpio –g mode 17 ALT3
+You are now able to use AT commands to communicate with the HL module on the PiloT
+For a full list of AT commands for the Sierra Wireless HL modules, visit the Source.
+
+To use AT commands, open a Minicom session by entering the following:
+    minicom –D /dev/ttyAMA0 
+    Check the AT commands are working by typing ‘AT’ and pressing enter.
+    This should return ‘OK’.
+    Exit Minicom (Ctrl A then X > enter).
+
+Connecting via USB
+
+The USB interface provides several USB endpoints to the Raspberry Pi. These can be set using the AT+USBCOMP command.
+Serial endpoints can be seen by typing the following:
+    ls /dev/ttyACM*
+ 
+A serial session over USB can be instigated using the command below:
+    minicom –D /dev/ttyACM0
+   
+   For LED function activation, enter the following commands in minicom:
+   To monitor network connections, use of the left LED is recommended. 
+   To use the LED to indicate whether the PiloT is connected to the network, enter the following command:
+   
+    at+ksync=2,7
+    
+    To switch off the left LED, send:
+    
+    at+ksync=0
+    
+    To switch off the right LED, send:
+    
+    at+kgpio=8,0
+    
+ 
+Using IP
+In Minicom, enter the following command, which changes the USB end points to provide a CDC ECM interface:
+
+    AT+KUSBCOMP=2
+Close Minicom (Ctrl A then X > enter), then power cycle the Raspberry Pi by removing and reinserting the power cable.
+
+
+Configure the HL8 bearer APN by opening a Minicom session to /dev/ttyACM0, 
+then entering the following command using the appropriate APN according to your selected network:
+
+    AT+CGDCONT=1,“IP”,“Access Point Name”
+    
+ Configure the APN username and password: 
+    
+    AT+WPPP=1,1,“username”,“password”
+    
+ Configure dynamic DNS request:
+      
+      AT+XDNS=1,1
+      
+ To start an IP session:
+ 
+    AT+XCEDATA=1,0
+    
+ To stop an IP session:
+ 
+    AT+CGACT=0,1
+    
+    
