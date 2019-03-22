@@ -1,0 +1,38 @@
+
+Step 1: Hardware setup
+Connect Hardware 
+- Connect the antenna to the PiloT shield
+- The SD card with Raspbian shall be inserted into the RaspberryPI
+- Stack the PiloT Shield over the RaspberryPI
+- Insert SIM card
+- Select one of the following mean to access the Raspian console:
+    - Use USB Keyboard and HDMI cable for direct access to console
+    - Use Ethernet or WiFi for remote access to console with SSH
+- Switch on the RaspberryPI
+
+
+Interface with HL Module
+
+The PiloT HL shield offers 2 hardware interfaces (USB or UART) for your RaspberryPI to control the HL module.
+Select the hardware interface you’d like to use in this tutorial:
+
+
+Check AT-Command Interface
+
+Use a serial terminal (e.g. minicom) to make sure that the AT interface can be established. To install minicom proceed as follow (internet access required):
+  sudo apt-get install minicom
+  
+Initialize the serial terminal to open the device port (e.g. /dev/ttyACM0 or /dev/ttyAMA0, depending of the hardware interface you’ve selected in the previous section) on which the HL module is attached to, for instance:
+  sudo minicom -D /dev/ttyAMA0
+  
+The following AT commands shall be entered within minicom to perform some sanity checking:
+  - AT : expected response OK. If not, make sure the board is powered on (the VBAT led should be on) and check minicom baudrate setting             (default HL baudrate should be 115200), using minicom -s
+  - AT+CPIN? : expected response READY
+              if not, SIM PIN may be entered using the AT+CPIN command. e.g. AT+CPIN=“1234”
+  - AT+IPR? : the operating baudrate should be returned, please use this baudrate in the remaining tutorial
+  - AT+CREG? : to check the network registration status, expected response +CREG:x,1 (registered, home network) or +CREG:x,5 (roaming)
+  - AT+CGREG? : to check the GPRS registration status, expected response +CGREG:x,1 (registered, home network) or +CGREG:x,5 (roaming)
+  - AT+CSQ : returns “RSSI”,“BER”. RSSI indicates the signal strength in dBm, a value of 99 reflects no signal detected or not known
+
+Issue AT+CGSN command to retrieve module’s IMEI, please note the IMEI, it will be used in upcoming tutorial steps
+Issue AT+KGSN=3 command to retrieve module’s Serial Number, please note the S/N for future use
